@@ -1,5 +1,7 @@
 package com.product.product.domain.service;
 
+import com.product.product.domain.exception.DeleteException;
+import com.product.product.domain.exception.NotFoundException;
 import com.product.product.domain.model.Department;
 import com.product.product.domain.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class DepartmentService {
 
     public Department findById(Long id){
         Optional<Department> dpto = jpa.findById(id);
-        return dpto.orElseThrow(() -> new RuntimeException());
+        return dpto.orElseThrow(() -> new NotFoundException("Department não encontrado"));
     }
 
     public Department update (Department obj){
@@ -34,7 +36,13 @@ public class DepartmentService {
 
     public void delete(Long id) {
         findById(id);
-        jpa.deleteById(id);
+
+        try {
+            jpa.deleteById(id);
+        } catch (Exception e) {
+            throw new DeleteException(e.getMessage());
+        }
+
     }
 
     public List<Department> findAll() {

@@ -1,5 +1,6 @@
 package com.product.product.domain.service;
 
+import com.product.product.domain.exception.NotFoundException;
 import com.product.product.domain.model.Department;
 import com.product.product.domain.model.Product;
 import com.product.product.domain.repository.DepartmentRepository;
@@ -28,7 +29,7 @@ public class ProductService {
 
     public Product findById(Long id){
         Optional<Product> product = jpa.findById(id);
-        return product.orElseThrow(() -> new RuntimeException());
+        return product.orElseThrow(() -> new NotFoundException("Product não encontrado"));
     }
 
     public Product update (Product obj){
